@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Registration</title>
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <h1>Student Registration Form</h1>
@@ -13,11 +18,63 @@
             <input type="text" id="name" name="name" required>
         </div>
         <div>
+            <label for="roll_number">Roll Number:</label>
+            <input type="text" id="roll_number" name="roll_number" required>
+        </div>
+        <div>
             <label for="department">Department:</label>
-            <input type="department" id="department" name="department" required>
+            <select id="department" name="department" required>
+                <option value="">Select Department</option>
+                <option value="AI">Artificial Intelligence (AI)</option>
+                <option value="CS">Computer Science (CS)</option>
+                <option value="SE">Software Engineering (SE)</option>
+                <option value="DS">Data Science (DS)</option>
+            </select>
+        </div>
+        <div>
+            <label for="dietary_preferences">Dietary Preferences:</label>
+            <input type="text" id="dietary_preferences" name="dietary_preferences">
+        </div>
+        <div>
+            <label for="registration_option">Registration Option:</label>
+            <select id="registration_option" name="registration_option">
+                <option value="coming">Coming</option>
+                <option value="not_coming">Not Coming</option>
+            </select>
+        </div>
+        <div>
+            <label for="family_members">Number of Family Members:</label>
+            <select id="family_members" name="family_members">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select>
+        </div>
+        <div id="family_members_fields">
+            <!-- Family members input fields will be inserted here based on selection -->
         </div>
         <input type="hidden" name="userType" value="student">
         <button type="submit">SUBMIT</button>
     </form>
+
+    <script>
+        document.getElementById('family_members').addEventListener('change', function() {
+            var numFamilyMembers = parseInt(this.value);
+            var familyMembersFields = document.getElementById('family_members_fields');
+            familyMembersFields.innerHTML = ''; // Clear previous fields
+
+            for (var i = 0; i < numFamilyMembers; i++) {
+                var familyMemberDiv = document.createElement('div');
+                familyMemberDiv.innerHTML = '<label for="family_member_' + (i + 1) + '">Family Member ' + (i + 1) + ' Name:</label>' +
+                    '<input type="text" id="family_member_' + (i + 1) + 'name" name="family_member' + (i + 1) + '_name">' +
+                    '<label for="family_member_' + (i + 1) + '_contact">Family Member ' + (i + 1) + ' Contact:</label>' +
+                    '<input type="text" id="family_member_' + (i + 1) + 'contact" name="family_member' + (i + 1) + '_contact">' +
+                    '<label for="family_member_' + (i + 1) + '_cnic">Family Member ' + (i + 1) + ' CNIC:</label>' +
+                    '<input type="text" id="family_member_' + (i + 1) + 'cnic" name="family_member' + (i + 1) + '_cnic">';
+                familyMembersFields.appendChild(familyMemberDiv);
+            }
+        });
+    </script>
 </body>
 </html>
