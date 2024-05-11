@@ -53,30 +53,5 @@
         <input type="hidden" name="userType" value="teacher">
         <button type="submit">SUBMIT</button>
     </form>
-
-    <script>
-        document.getElementById('family_members').addEventListener('change', function() {
-            var numFamilyMembers = parseInt(this.value);
-            var familyDetailsDiv = document.getElementById('family_details');
-            familyDetailsDiv.innerHTML = ''; // Clear previous fields
-
-            if (numFamilyMembers > 0) {
-                familyDetailsDiv.classList.remove('hidden');
-            } else {
-                familyDetailsDiv.classList.add('hidden');
-            }
-
-            for (var i = 0; i < numFamilyMembers; i++) {
-                var familyMemberDiv = document.createElement('div');
-                familyMemberDiv.innerHTML = '<label for="family_member_' + (i + 1) + '_name">Family Member ' + (i + 1) + ' Name:</label>' +
-                    '<input type="text" id="family_member_' + (i + 1) + 'name" name="family_member' + (i + 1) + '_name">' +
-                    '<label for="family_member_' + (i + 1) + '_contact">Family Member ' + (i + 1) + ' Contact:</label>' +
-                    '<input type="text" id="family_member_' + (i + 1) + 'contact" name="family_member' + (i + 1) + '_contact">' +
-                    '<label for="family_member_' + (i + 1) + '_cnic">Family Member ' + (i + 1) + ' CNIC:</label>' +
-                    '<input type="text" id="family_member_' + (i + 1) + 'cnic" name="family_member' + (i + 1) + '_cnic">';
-                familyDetailsDiv.appendChild(familyMemberDiv);
-            }
-        });
-    </script> 
 </body>
 </html>
