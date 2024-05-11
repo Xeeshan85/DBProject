@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { signUpValidation, loginValidation } = require('../Helpers/validator');
+const { signUpValidation, loginValidation, studentFormValidation } = require('../Helpers/validator');
 
 const userController = require('../Controllers/userController')
 const homeController = require('../Controllers/homeController')
@@ -22,6 +22,9 @@ router.get('/teacherForm', userController.isAuthorized, (req, res) => {
     res.render('teacherForm');
 });
 
+
+router.post('/studentForm', studentFormValidation, userController.studentForm)
+router.post('/teacherForm', teacherFormValidation, userController.teacherForm)
 
 router.post('/register', signUpValidation, userController.register);
 router.post('/login', loginValidation, userController.login);
