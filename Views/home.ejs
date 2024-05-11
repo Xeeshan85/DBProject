@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Back!</title>
+    <style>
+        /* Style for header */
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        header button {
+            background-color: #555;
+            color: white;
+            padding: 5px 10px;
+            margin: 0 10px;
+            border: none;
+            cursor: pointer;
+        }
+        /* Style for hovering division */
+        .farewell-registration {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #ddd;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+        .farewell-registration:hover {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/home/Profile" class="btn">Profile</a>
+        <form action="/logout" method="get">
+            <button type="submit">Logout</button>
+        </form>
+        <button>Volunteer</button>
+    </header>
+    <h1>Welcome Back! This is gonna be an amazing farewell Experience.</h1>
+    <div class="farewell-registration">
+        <h2>Farewell Registration</h2>
+        <button>Register</button>
+    </div>
+</body>
+</html>
