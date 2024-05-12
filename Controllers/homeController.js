@@ -301,7 +301,7 @@ const getProposals = (req, res) => {
 const voteProposal = (req, res) => {
     const userId = req.user.id;
     const proposalId = req.body.proposalId;
-    console.log('Pro vote called');
+    
     // Check if the user has already voted for this proposal
     db.query('SELECT * FROM ProposalVotes WHERE UserId = ? AND ProposalId = ?', [userId, proposalId], (error, results) => {
         if (error) {
