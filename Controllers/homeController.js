@@ -86,14 +86,34 @@ const logout = (req, res) => {
     res.redirect('/login');
 }
 
-const volunteer = (req, res) => {
-    res.render('/volunteer');
+
+
+const getVolunteer = (req, res) => {
+    const userId = req.user.id;
+
+    db.query('SELECT * FROM Tasks;', (error, taskResults) => {
+        if (error) {
+            return res.status(500).send({ message: 'Error fetching user data' });
+        }
+
+        if (taskResults.length === 0) {
+            return res.status(404).send({ message: 'Tasks not found' });
+        }
+
+        return res.render('./volunteer', { taskResults }); // Pass taskResults directly
+    });
 }
+
+// const postVolunteer = (req, res) => {
+//     const userId = req.user.id;
+
+// }
 
 
 
 module.exports = {
     getProfile,
     logout,
-    volunteer
+    getVolunteer
+    // postVolunteer
 }

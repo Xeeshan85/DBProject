@@ -8,12 +8,19 @@
 <body>
     <h1>Volunteer for Tasks</h1>
     <form action="/submit-volunteer" method="post">
-        <label for="task">Select a Task:</label>
-        <select name="task" id="task">
-            <% tasks.forEach(task => { %>
-                <option value="<%= task.id %>"><%= task.name %></option>
-            <% }); %>
-        </select>
+        <% if (Array.isArray(taskResults)) { %> <!-- Check if taskData is an array -->
+            <ul>
+                <% taskResults.forEach(task => { %>
+                    <li>
+                        <input type="checkbox" name="tasks[]" value="<%= task.TaskId %>">
+                        <label for="<%= task.TaskId %>"><%= task.Name %> - <%= task.Description %></label>
+                    </li>
+                <% }); %>
+            </ul>
+        <% } else { %>
+            <p>No tasks found</p>
+        <% } %>
+        
         <button type="submit">Volunteer</button>
     </form>
 </body>

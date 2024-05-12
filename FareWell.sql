@@ -45,7 +45,23 @@ CREATE TABLE FamilyMembers (
 );
 
 
-select * from users;
+CREATE TABLE Tasks (
+	TaskId INT AUTO_INCREMENT PRIMARY KEY,
+    Name varchar(100),
+    Description text
+);
+insert into Tasks (Name, Description) values ('Food', 'Volunteer will be responsible for food quality.');
+
+CREATE TABLE StudentTasks (
+    StudentId INT,
+    TaskId INT,
+    PRIMARY KEY (StudentId, TaskId),
+    FOREIGN KEY (StudentId) REFERENCES Students(StudentId),
+    FOREIGN KEY (TaskId) REFERENCES Tasks(TaskId)
+);
+
+
+select * from Tasks;
 
 
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'KITa-@2247493$';
