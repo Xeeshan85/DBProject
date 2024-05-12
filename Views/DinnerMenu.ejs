@@ -48,9 +48,50 @@
             border-radius: 5px;
             cursor: pointer;
         }
+        /* Style for header */
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        header button {
+            background-color: #555;
+            color: white;
+            padding: 5px 10px;
+            margin: 0 10px;
+            border: none;
+            cursor: pointer;
+        }
+        /* Style for hovering division */
+        .farewell-registration {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #ddd;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+        .farewell-registration:hover {
+            display: block;
+        }
     </style>
+    <header>
+        <form action="/home" method="get">
+            <button type="submit">Home</button>
+        </form>
+    </header>
 </head>
 <body>
+    <!-- Form to add new dinner items -->
+    <div class="add-item-form">
+        <form action="/addDinnerItem" method="post">
+            <input type="text" name="itemName" placeholder="Enter item name" required>
+            <input type="text" name="itemDescription" placeholder="Enter item description" required>
+            <button type="submit">Add Item</button>
+        </form>
+    </div>
     <h1>Dinner Menu</h1>
     <% dinnerItems.forEach(item => { %>
         <div class="card">
@@ -64,13 +105,5 @@
         </div>
     <% }); %>
 
-    <!-- Form to add new dinner items -->
-    <div class="add-item-form">
-        <form action="/addDinnerItem" method="post">
-            <input type="text" name="itemName" placeholder="Enter item name" required>
-            <input type="text" name="itemDescription" placeholder="Enter item description" required>
-            <button type="submit">Add Item</button>
-        </form>
-    </div>
 </body>
 </html>

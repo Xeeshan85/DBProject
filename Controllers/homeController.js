@@ -217,8 +217,8 @@ const addDinnerItem = (req, res) => {
 const dinnerVote = (req, res) => {
     const userId = req.user.id;
     const itemId = req.body.itemId;
-    console.log('Vote Called');
-    console.log(itemId);
+    // console.log('Vote Called');
+    // console.log(itemId);
     // Check if the user has already voted for this item
     db.query('SELECT * FROM DinnerVotes WHERE UserId = ? AND ItemId = ?', [userId, itemId], (error, result) => {
         if (error) {
@@ -249,6 +249,86 @@ const dinnerVote = (req, res) => {
     });
 };
 
+// const getProposals = (req, res) => {
+//     const userId = req.user.id;
+
+//     db.query('SELECT p.*, COUNT(v.ProposalId) AS TotalVotes FROM Proposals p LEFT JOIN ProposalVotes v ON p.ProposalId = v.ProposalId GROUP BY p.ProposalId', (error, results) => {
+//         if (error) {
+//             return res.status(500).send({ message: 'Error fetching proposals' });
+//         }
+
+//         return res.render('proposals', { proposals: results });
+//     });
+// };
+
+const getProposals = (req, res) => {
+
+    if (req.method === 'POST' && req.body.proposalName) {
+        const proposalName = req.body.proposalName.trim();
+        const description = req.body.description.trim();
+        const durationInMinutes = parseInt(req.body.duration); // Convert duration to integer
+        const additionalRequirements = req.body.additionalRequirements.trim();
+        
+        // Check if the proposal already exists
+        db.query('SELECT * FROM Proposals WHERE ProposalType = ?', [proposalName], (error, results) => {
+            if (error) {
+                return res.status(500).send({ message: 'Error checking existing proposals' });
+            }
+
+            if (results.length === 0) {
+                // If the proposal doesn't exist, insert it into the database
+                db.query('INSERT INTO Proposals (ProposalType, Description, Duration, AdditionalRequirements) VALUES (?, ?, ?, ?)', [proposalName, description, durationInMinutes, additionalRequirements], (error, result) => {
+                    if (error) {
+                        return res.status(500).send({ message: 'Error adding new proposal' });
+                    }
+                });
+            }
+
+            return res.redirect('/proposals');
+        });
+    } else {
+        db.query('SELECT p.*, COUNT(v.ProposalId) AS TotalVotes FROM Proposals p LEFT JOIN ProposalVotes v ON p.ProposalId = v.ProposalId GROUP BY p.ProposalId', (error, results) => {
+            if (error) {
+                return res.status(500).send({ message: 'Error fetching proposals' });
+            }
+
+            // Render the proposals.ejs view with the fetched data
+            return res.render('proposals', { proposals: results });
+        });
+    }
+};
+
+const voteProposal = (req, res) => {
+    const userId = req.user.id;
+    const proposalId = req.body.proposalId;
+    console.log('Pro vote called');
+    // Check if the user has already voted for this proposal
+    db.query('SELECT * FROM ProposalVotes WHERE UserId = ? AND ProposalId = ?', [userId, proposalId], (error, results) => {
+        if (error) {
+            return res.status(500).send({ message: 'Error checking existing vote' });
+        }
+
+        if (results.length > 0) {
+            return res.status(400).send({ message: 'User has already voted for this proposal' });
+        }
+
+        // If the user hasn't voted yet, insert their vote into the database
+        db.query('INSERT INTO ProposalVotes (UserId, ProposalId) VALUES (?, ?)', [userId, proposalId], (error, result) => {
+            if (error) {
+                return res.status(500).send({ message: 'Error adding vote' });
+            }
+
+            db.query('SELECT p.*, COUNT(v.ProposalId) AS TotalVotes FROM Proposals p LEFT JOIN ProposalVotes v ON p.ProposalId = v.ProposalId GROUP BY p.ProposalId', (error, results1) => {
+                if (error) {
+                    return res.status(500).send({ message: 'Error fetching proposals' });
+                }
+    
+                return res.render('proposals', { proposals: results1 });
+            });
+        });
+    });
+};
+
 
 
 module.exports = {
@@ -258,5 +338,7 @@ module.exports = {
     postVolunteer,
     getMenu,
     addDinnerItem,
-    dinnerVote
+    dinnerVote,
+    getProposals,
+    voteProposal
 }

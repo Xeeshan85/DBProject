@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Proposals</title>
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px;
+            display: inline-block;
+            width: 300px;
+        }
+        h2 {
+            color: #4CAF50;
+        }
+        p {
+            color: #333;
+        }
+        .vote-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        header button {
+            background-color: #555;
+            color: white;
+            padding: 5px 10px;
+            margin: 0 10px;
+            border: none;
+            cursor: pointer;
+        }
+        /* Style for hovering division */
+        .farewell-registration {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #ddd;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+        .farewell-registration:hover {
+            display: block;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        label {
+            display: inline-block;
+            width: 15px; /* Adjust the width as needed */
+            text-align: right;
+            margin-top: 10px;
+        }
+        input[type="text"],
+        textarea,
+        select {
+            width: 300px;
+            padding: 5px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            box-sizing: border-box;
+            vertical-align: middle; /* Align elements vertically in the middle */
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+    <header>
+        <form action="/home" method="get">
+            <button type="submit">Home</button>
+        </form>
+    </header>
+</head>
+<body>
+    <h1>Proposals</h1>
+    
+    <!-- <form action="/getProposals" method="POST">
+        <label for="proposalName">Proposal Name:</label>
+        <input type="text" id="proposalName" name="proposalName" required><br>
+        
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" required></textarea><br>
+        
+        <label for="duration">Duration (in minutes):</label>
+        <input type="number" id="duration" name="duration" required><br>
+        
+        <label for="additionalRequirements">Additional Requirements:</label>
+        <textarea id="additionalRequirements" name="additionalRequirements"></textarea><br>
+        
+        <button type="submit">Add Proposal</button>
+    </form> -->
+
+    <!-- Form to add a new proposal -->
+    <form action="/proposals" method="post">
+        <input type="text" id="proposalName" name="proposalName" placeholder="Enter proposal name" required>
+        
+        <select id="type" name="type" required>
+            <option value="">Select Type</option>
+            <option value="Dance">Dance</option>
+            <option value="Music">Music</option>
+            <option value="Entertainment">Entertainment</option>
+            <option value="Song">Song</option>
+            <option value="Fun">Fun</option>
+            <option value="Comedy">Comedy</option>
+        </select>
+        
+        <textarea id="description" name="description" placeholder="Enter description" required></textarea>
+        
+        <input type="number" id="duration" name="duration" placeholder="Enter duration in minutes" required min="1" max="60">
+        
+        
+        <textarea id="additionalRequirements" name="additionalRequirements" placeholder="Enter additional requirements"></textarea>
+        
+        <div class="button-container">
+            <button type="submit">Submit Proposal</button>
+        </div>
+    </form>
+
+    <h1>Performance Proposals</h1>
+    <% proposals.forEach(proposal => { %>
+        <div class="card">
+            <h2><%= proposal.ProposalType %></h2>
+            <p><%= proposal.Description %></p>
+            <p>Duration: <%= proposal.Duration %> minutes</p>
+            <p>Additional Requirements: <%= proposal.AdditionalRequirements %></p>
+            <p>Total Votes: <%= proposal.TotalVotes %></p>
+            <form action="/voteProposal" method="post">
+                <input type="hidden" name="proposalId" value="<%= proposal.ProposalId %>">
+                <button type="submit" class="vote-btn">Vote</button>
+            </form>
+        </div>
+    <% }); %>
+</body>
+</html>

@@ -86,6 +86,26 @@ CREATE TABLE DinnerVotes (
     FOREIGN KEY (ItemId) REFERENCES DinnerItems(ItemId)
 );
 
+CREATE TABLE Proposals (
+    ProposalId INT AUTO_INCREMENT PRIMARY KEY,
+    ProposalType VARCHAR(100),
+    Description TEXT,
+    Duration INT,
+    AdditionalRequirements TEXT
+);
+INSERT INTO Proposals (ProposalType, Description, Duration, AdditionalRequirements) 
+VALUES 
+('Dance Performance', 'A group dance performance showcasing different dance forms.', 30, 'Requires a stage and music system.'),
+('Music Performance', 'Live music performance by students showcasing various musical talents.', 40, 'Requires musical instruments and audio setup.');
+
+
+CREATE TABLE ProposalVotes (
+    UserId INT,
+    ProposalId INT,
+    PRIMARY KEY (UserId, ProposalId),
+    FOREIGN KEY (UserId) REFERENCES Users(UserId),
+    FOREIGN KEY (ProposalId) REFERENCES Proposals(ProposalId)
+);
 
 
 

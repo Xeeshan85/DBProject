@@ -31,6 +31,8 @@ router.post('/studentForm', userController.studentForm);
 router.post('/teacherForm', userController.teacherForm);
 router.post('/addDinnerItem', userController.isAuthorized, homeController.addDinnerItem);
 router.post('/dinnerVote', userController.isAuthorized, homeController.dinnerVote);
+router.post('/proposals', userController.isAuthorized, homeController.getProposals);
+router.post('/voteProposal', userController.isAuthorized, homeController.voteProposal);
 
 router.post('/volunteer', userController.isAuthorized, homeController.postVolunteer);
 
@@ -42,6 +44,7 @@ router.get('/home/profile', userController.isAuthorized, homeController.getProfi
 router.get('/logout', userController.isAuthorized, homeController.logout);
 router.get('/volunteer', userController.isAuthorized, homeController.getVolunteer);
 router.get('/DinnerMenu', userController.isAuthorized, homeController.getMenu);
+router.get('/proposals', userController.isAuthorized, homeController.getProposals);
 
 
 
