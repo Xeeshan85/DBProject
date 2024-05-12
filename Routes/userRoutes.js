@@ -29,6 +29,8 @@ router.get('/happyvolunteer', userController.isAuthorized, (req, res) => {
 
 router.post('/studentForm', userController.studentForm);
 router.post('/teacherForm', userController.teacherForm);
+router.post('/addDinnerItem', userController.isAuthorized, homeController.addDinnerItem);
+router.post('/dinnerVote', userController.isAuthorized, homeController.dinnerVote);
 
 router.post('/volunteer', userController.isAuthorized, homeController.postVolunteer);
 

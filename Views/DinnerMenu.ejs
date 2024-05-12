@@ -32,6 +32,22 @@
             border-radius: 5px;
             cursor: pointer;
         }
+        .add-item-form {
+            margin-top: 20px;
+        }
+        .add-item-form input[type="text"] {
+            width: 200px;
+            padding: 5px;
+            margin: 5px;
+        }
+        .add-item-form button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -41,11 +57,20 @@
             <h2><%= item.Name %></h2>
             <p><%= item.Description %></p>
             <p>Total Votes: <%= item.TotalVotes %></p>
-            <form action="/vote" method="post">
+            <form action="/dinnerVote" method="post">
                 <input type="hidden" name="itemId" value="<%= item.ItemId %>">
                 <button type="submit" class="vote-btn">Vote</button>
             </form>
         </div>
     <% }); %>
+
+    <!-- Form to add new dinner items -->
+    <div class="add-item-form">
+        <form action="/addDinnerItem" method="post">
+            <input type="text" name="itemName" placeholder="Enter item name" required>
+            <input type="text" name="itemDescription" placeholder="Enter item description" required>
+            <button type="submit">Add Item</button>
+        </form>
+    </div>
 </body>
 </html>

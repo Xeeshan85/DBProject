@@ -179,6 +179,76 @@ const getMenu = (req, res) => {
     });
 };
 
+const addDinnerItem = (req, res) => {
+    const { itemName, itemDescription } = req.body;
+    
+    // Check if the item already exists in the DinnerItems table
+    db.query('SELECT * FROM DinnerItems WHERE Name = ?', itemName, (error, results) => {
+        if (error) {
+            console.error('Error checking if dinner item exists:', error);
+            return res.status(500).send({ message: 'Error checking if dinner item exists' });
+        }
+
+        if (results.length === 0) {
+            // If the item does not exist, insert it into the DinnerItems table
+            db.query('INSERT INTO DinnerItems (Name, Description) VALUES (?, ?)', [itemName, itemDescription], (error, results) => {
+                if (error) {
+                    console.error('Error adding dinner item:', error);
+                    return res.status(500).send({ message: 'Error adding dinner item' });
+                }
+                // Redirect to the getMenu controller to refresh the menu
+                // res.render('/getMenu');
+            });
+        }
+        
+        const userId = req.user.id;
+
+        db.query('SELECT d.ItemId, d.Name, d.Description, COUNT(v.ItemId) AS TotalVotes FROM DinnerItems d LEFT JOIN DinnerVotes v ON d.ItemId = v.ItemId GROUP BY d.ItemId, d.Name, d.Description', (error, results) => {
+            if (error) {
+                console.error('Error fetching dinner items:', error);
+                return res.status(500).send({ message: 'Error fetching dinner items' });
+            }
+
+            res.render('DinnerMenu', { dinnerItems: results });
+        });
+    });
+};
+
+const dinnerVote = (req, res) => {
+    const userId = req.user.id;
+    const itemId = req.body.itemId;
+    console.log('Vote Called');
+    console.log(itemId);
+    // Check if the user has already voted for this item
+    db.query('SELECT * FROM DinnerVotes WHERE UserId = ? AND ItemId = ?', [userId, itemId], (error, result) => {
+        if (error) {
+            console.error('Error checking vote:', error);
+            return res.status(500).json({ message: 'Error checking vote' });
+        }
+
+        // If the user has already voted for this item, return an error
+        if (result.length > 0) {
+            return res.status(400).json({ message: 'You have already voted for this item' });
+        }
+
+        db.query('INSERT INTO DinnerVotes (UserId, ItemId) VALUES (?, ?)', [userId, itemId], (error, result) => {
+            if (error) {
+                console.error('Error adding vote:', error);
+                return res.status(500).json({ message: 'Error adding vote' });
+            }
+
+            db.query('SELECT d.ItemId, d.Name, d.Description, COUNT(v.ItemId) AS TotalVotes FROM DinnerItems d LEFT JOIN DinnerVotes v ON d.ItemId = v.ItemId GROUP BY d.ItemId, d.Name, d.Description', (error, results) => {
+                if (error) {
+                    console.error('Error fetching dinner items:', error);
+                    return res.status(500).send({ message: 'Error fetching dinner items' });
+                }
+
+                res.render('DinnerMenu', { dinnerItems: results });
+            });
+        });
+    });
+};
+
 
 
 module.exports = {
@@ -186,5 +256,7 @@ module.exports = {
     logout,
     getVolunteer,
     postVolunteer,
-    getMenu
+    getMenu,
+    addDinnerItem,
+    dinnerVote
 }
