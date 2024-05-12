@@ -76,6 +76,15 @@
                 <p><strong>CNIC:</strong> <%= member.CNIC %></p>
             <% }) %>
         <% } %>
+
+        <% if (volunteerResults) { %>
+            <h2>Volunteered Tasks Assigned</h2>
+            <ul>
+                <% volunteerResults.forEach(task => { %>
+                    <li><%= task.Name %> - <%= task.Description %></li>
+                <% }); %>
+            </ul>
+        <% } %>
     </div>
 </body>
 </html>

@@ -21,6 +21,7 @@ const getProfile = (req, res) => {
 
         const userData = userResult[0];
         var userExtendedData = userResult[0];
+        var familiesResult = userResult[0];
         // Determine if the user is a student or teacher
         if (userData.UserType === 'student') {
             // Fetch student-specific data from the Students table
@@ -34,16 +35,6 @@ const getProfile = (req, res) => {
                 }
 
                 userExtendedData = studentResult[0];
-
-                // Fetch family members data from the FamilyMembers table
-                // db.query('SELECT * FROM FamilyMembers WHERE UserId = ?', userId, (error, familyResult) => {
-                //     if (error) {
-                //         return res.status(500).send({ message: 'Error fetching family members data' });
-                //     }
-
-                //     // Render the profile page with all the fetched data
-                //     return res.render('./profile', { userData, studentData, familyData: familyResult });
-                // });
             });
         } else if (userData.UserType === 'teacher') {
             // Fetch teacher-specific data from the Teachers table
@@ -57,11 +48,9 @@ const getProfile = (req, res) => {
                 }
 
                 userExtendedData = teacherResult[0];
-
-                
             });
         }
-        // userExtendedData
+
         if (userData.UserType == 'admin') {
             // For admin users, render the profile page with only user data
             return res.render('./profile', { userData });
@@ -72,9 +61,17 @@ const getProfile = (req, res) => {
             if (error) {
                 return res.status(500).send({ message: 'Error fetching family members data' });
             }
-
+            familiesResult = familyResult;
             // Render the profile page with all the fetched data
-            return res.render('./profile', { userData, userExtendedData, familyData: familyResult });
+            // return res.render('./profile', { userData, userExtendedData, familyData: familyResult });
+        });
+
+         db.query('SELECT Tasks.Name, Tasks.Description FROM StudentTasks JOIN Tasks ON StudentTasks.TaskId = Tasks.TaskId WHERE StudentTasks.UserId = ?', userId, (error, volunteerResults) => {
+            if (error) {
+                return res.status(500).send({ message: 'Error fetching family members data' });
+            }
+            
+            return res.render('./profile', { userData, userExtendedData, volunteerResults, familyData: familiesResult });
         });
     });
 };
@@ -85,8 +82,6 @@ const logout = (req, res) => {
     res.clearCookie('token');
     res.redirect('/login');
 }
-
-
 
 const getVolunteer = (req, res) => {
     const userId = req.user.id;
