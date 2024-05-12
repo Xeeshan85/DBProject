@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Volunteer for Tasks</h1>
-    <form action="/submit-volunteer" method="post">
+    <form action="/volunteer" method="post">
         <% if (Array.isArray(taskResults)) { %> <!-- Check if taskData is an array -->
             <ul>
                 <% taskResults.forEach(task => { %>

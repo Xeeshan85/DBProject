@@ -22,6 +22,10 @@ router.get('/teacherForm', userController.isAuthorized, (req, res) => {
     res.render('teacherForm');
 });
 
+router.get('/happyvolunteer', userController.isAuthorized, (req, res) => {
+    res.render('happyvolunteer');
+});
+
 // router.get('/volunteer', userController.isAuthorized, (req, res) => {
 //     res.render('volunteer');
 // });
@@ -30,7 +34,7 @@ router.get('/teacherForm', userController.isAuthorized, (req, res) => {
 router.post('/studentForm', userController.studentForm);
 router.post('/teacherForm', userController.teacherForm);
 
-// router.post('/volunteer', homeController.postVolunteer);
+router.post('/volunteer', userController.isAuthorized, homeController.postVolunteer);
 
 router.post('/register', signUpValidation, userController.register);
 router.post('/login', loginValidation, userController.login);

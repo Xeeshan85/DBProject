@@ -53,10 +53,10 @@ CREATE TABLE Tasks (
 insert into Tasks (Name, Description) values ('Food', 'Volunteer will be responsible for food quality.');
 
 CREATE TABLE StudentTasks (
-    StudentId INT,
+    UserId INT,
     TaskId INT,
     PRIMARY KEY (StudentId, TaskId),
-    FOREIGN KEY (StudentId) REFERENCES Students(StudentId),
+    FOREIGN KEY (UserId) REFERENCES Users(UserId),
     FOREIGN KEY (TaskId) REFERENCES Tasks(TaskId)
 );
 
