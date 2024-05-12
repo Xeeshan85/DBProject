@@ -23,14 +23,15 @@ router.get('/teacherForm', userController.isAuthorized, (req, res) => {
 });
 
 
-router.post('/studentForm', studentFormValidation, userController.studentForm)
-router.post('/teacherForm', teacherFormValidation, userController.teacherForm)
+router.post('/studentForm', userController.studentForm)
+// router.post('/teacherForm', teacherFormValidation, userController.teacherForm)
 
 router.post('/register', signUpValidation, userController.register);
 router.post('/login', loginValidation, userController.login);
 router.get('/home', userController.isAuthorized, userController.getHome);
 router.get('/home/profile', userController.isAuthorized, homeController.getProfile);
 router.get('/logout', userController.isAuthorized, homeController.logout);
+router.get('/volunteer', userController.isAuthorized, homeController.volunteer);
 // router.get('/studentForm', userController.isAuthorized);
 // router.get('/logout', userController.logout);
 

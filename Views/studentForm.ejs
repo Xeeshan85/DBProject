@@ -37,9 +37,10 @@
         </div>
         <div>
             <label for="registration_option">Registration Option:</label>
+            <!-- <input type="hidden" id="registration_status" name="registration_status" value="false"> -->
             <select id="registration_option" name="registration_option">
                 <option value="coming">Coming</option>
-                <option value="not_coming">Not Coming</option>
+                <option value="not coming">Not Coming</option>
             </select>
         </div>
         <div>
@@ -53,6 +54,30 @@
         </div>
         <div id="family_members_fields">
             <!-- Family members input fields will be inserted here based on selection -->
+            <div id="family_member_1" class="hidden">
+                <label for="family_member_1_name">Family Member 1 Name:</label>
+                <input type="text" id="family_member_1_name" name="family_member_1_name">
+                <label for="family_member_1_contact">Family Member 1 Contact:</label>
+                <input type="text" id="family_member_1_contact" name="family_member_1_contact">
+                <label for="family_member_1_cnic">Family Member 1 CNIC:</label>
+                <input type="text" id="family_member_1_cnic" name="family_member_1_cnic">
+            </div>
+            <div id="family_member_2" class="hidden">
+                <label for="family_member_2_name">Family Member 2 Name:</label>
+                <input type="text" id="family_member_2_name" name="family_member_2_name">
+                <label for="family_member_2_contact">Family Member 2 Contact:</label>
+                <input type="text" id="family_member_2_contact" name="family_member_2_contact">
+                <label for="family_member_2_cnic">Family Member 2 CNIC:</label>
+                <input type="text" id="family_member_2_cnic" name="family_member_2_cnic">
+            </div>
+            <div id="family_member_3" class="hidden">
+                <label for="family_member_3_name">Family Member 3 Name:</label>
+                <input type="text" id="family_member_3_name" name="family_member_3_name">
+                <label for="family_member_3_contact">Family Member 3 Contact:</label>
+                <input type="text" id="family_member_3_contact" name="family_member_3_contact">
+                <label for="family_member_3_cnic">Family Member 3 CNIC:</label>
+                <input type="text" id="family_member_3_cnic" name="family_member_3_cnic">
+            </div>
         </div>
         <input type="hidden" name="userType" value="student">
         <button type="submit">SUBMIT</button>
@@ -61,18 +86,25 @@
     <script>
         document.getElementById('family_members').addEventListener('change', function() {
             var numFamilyMembers = parseInt(this.value);
-            var familyMembersFields = document.getElementById('family_members_fields');
-            familyMembersFields.innerHTML = ''; // Clear previous fields
+            var familyMembersFields = document.getElementById('family_members_fields').children;
+            
+            // Hide all family member fields
+            for (var i = 0; i < familyMembersFields.length; i++) {
+                familyMembersFields[i].classList.add('hidden');
+            }
 
+            // Show family member fields based on selection
             for (var i = 0; i < numFamilyMembers; i++) {
-                var familyMemberDiv = document.createElement('div');
-                familyMemberDiv.innerHTML = '<label for="family_member_' + (i + 1) + '">Family Member ' + (i + 1) + ' Name:</label>' +
-                    '<input type="text" id="family_member_' + (i + 1) + 'name" name="family_member' + (i + 1) + '_name">' +
-                    '<label for="family_member_' + (i + 1) + '_contact">Family Member ' + (i + 1) + ' Contact:</label>' +
-                    '<input type="text" id="family_member_' + (i + 1) + 'contact" name="family_member' + (i + 1) + '_contact">' +
-                    '<label for="family_member_' + (i + 1) + '_cnic">Family Member ' + (i + 1) + ' CNIC:</label>' +
-                    '<input type="text" id="family_member_' + (i + 1) + 'cnic" name="family_member' + (i + 1) + '_cnic">';
-                familyMembersFields.appendChild(familyMemberDiv);
+                familyMembersFields[i].classList.remove('hidden');
+            }
+        });
+
+        document.getElementById('registration_option').addEventListener('change', function() {
+            var registration_option_value = this.value;
+            if (registration_option_value === 'coming') {
+                document.getElementById('registration_status').value = 'true';
+            } else {
+                document.getElementById('registration_status').value = 'false';
             }
         });
     </script>

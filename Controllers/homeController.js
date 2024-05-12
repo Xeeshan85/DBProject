@@ -31,9 +31,14 @@ const logout = (req, res) => {
     res.redirect('/login');
 }
 
+const volunteer = (req, res) => {
+    res.render('/volunteer');
+}
+
 
 
 module.exports = {
     getProfile,
-    logout
+    logout,
+    volunteer
 }

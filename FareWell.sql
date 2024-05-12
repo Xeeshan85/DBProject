@@ -4,35 +4,46 @@ use FareWell;
 CREATE TABLE Users (
     UserId INT AUTO_INCREMENT PRIMARY KEY,
     Name VARCHAR(100),
-	Email VARCHAR(100),
+    Email VARCHAR(100),
     Password TEXT,
-    UserType TINYINT DEFAULT 0,
-    CONSTRAINT Chk_User_Type CHECK (UserType IN (0, 2)) 
-    -- 0 for students 1 for teachers 2 for admin
+    UserType ENUM('student', 'teacher', 'admin') DEFAULT 'student'
 );
 
-select * from users;
+CREATE TABLE Admins (
+    UserId INT PRIMARY KEY,
+    FOREIGN KEY (UserId) REFERENCES Users(UserId)
+);
+
 
 CREATE TABLE Students (
-    StudentId INT AUTO_INCREMENT PRIMARY KEY,
-    RollNo VARCHAR(10),
+    UserId INT PRIMARY KEY,
+    RollNo varchar(10),
     Department VARCHAR(100),
-    PhoneNo VARCHAR(50),
     DietaryPreferences VARCHAR(100),
-    RegisterationStatus bool
+    RegistrationStatus BOOLEAN,
+    FOREIGN KEY (UserId) REFERENCES Users(UserId)
 );
+
 
 CREATE TABLE Teachers (
-    TeacherId INT AUTO_INCREMENT PRIMARY KEY,
+    UserId INT PRIMARY KEY,
     Department VARCHAR(100),
-    PhoneNo VARCHAR(50),
     DietaryPreferences VARCHAR(100),
-    RegisterationStatus bool
+    RegistrationStatus BOOLEAN,
+    FOREIGN KEY (UserId) REFERENCES Users(UserId)
+);
+
+CREATE TABLE FamilyMembers (
+	familyMemberId INT auto_increment PRIMARY KEY,
+	UserId INT,
+    Name varchar(100),
+    Contact varchar(11),
+    CNIC varchar(13),
+    FOREIGN KEY (UserId) REFERENCES Users(UserId)
 );
 
 
-
-
+select * from familymembers;
 
 
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'KITa-@2247493$';
@@ -47,11 +58,11 @@ ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'KITa-@22
 
 -- Create FamilyMembers table
 CREATE TABLE FamilyMembers (
-    familyId INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT,
-    name VARCHAR(255),
-    cnic INT,
-    contact INT,
+    FamilyId INT AUTO_INCREMENT PRIMARY KEY,
+    UserId INT,
+    Name VARCHAR(255),
+    CNIC INT,
+    Contact INT,
     FOREIGN KEY (user_id) REFERENCES `User`(UserId)
 );
 
