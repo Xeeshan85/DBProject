@@ -1,5 +1,7 @@
 create database FareWell;
+drop database farewell;
 use FareWell;
+
 
 CREATE TABLE Users (
     UserId INT AUTO_INCREMENT PRIMARY KEY,
@@ -43,7 +45,7 @@ CREATE TABLE FamilyMembers (
 );
 
 
-select * from familymembers;
+select * from users;
 
 
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'KITa-@2247493$';

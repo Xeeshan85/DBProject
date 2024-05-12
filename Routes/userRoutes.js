@@ -24,7 +24,7 @@ router.get('/teacherForm', userController.isAuthorized, (req, res) => {
 
 
 router.post('/studentForm', userController.studentForm)
-// router.post('/teacherForm', teacherFormValidation, userController.teacherForm)
+router.post('/teacherForm', userController.teacherForm)
 
 router.post('/register', signUpValidation, userController.register);
 router.post('/login', loginValidation, userController.login);

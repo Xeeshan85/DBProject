@@ -30,18 +30,18 @@ const register = (req, res) => {
                         });
                     } else {
                         db.query(
-                            `SELECT * FROM users ;`,
-                            // `INSERT INTO users (name, email, password, UserType) VALUES (${db.escape(req.body.name)}, ${db.escape(req.body.email)}, ${db.escape(hash)}, ${db.escape(req.body.userType)});`,
+                            // `SELECT * FROM users ;`,
+                            `INSERT INTO users (name, email, password, UserType) VALUES (${db.escape(req.body.name)}, ${db.escape(req.body.email)}, ${db.escape(hash)}, ${db.escape(req.body.userType)});`,
                             (err, result) => {
                                 if (err) {
                                     return res.status(500).send({
                                         msg: err
                                     });
                                 }
-                                const token = jwt.sign({ id: result[0]['UserId'], userType: req.body.userType }, JWT_SECRET, { expiresIn: '1h' });
+                                
+                                const token = jwt.sign({ id: result.insertId, userType: req.body.userType }, JWT_SECRET, { expiresIn: '1h' });
                                 res.cookie('token', token, { httpOnly: true });
-
-
+                                
                                 if (req.body.userType === 'student') {
                                     return res.redirect('studentForm');
                                 } else if (req.body.userType === 'teacher') {
@@ -98,6 +98,11 @@ const login = (req, res) => {
 
 
 const studentForm = (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
     const authToken = req.cookies.token;
     if (!authToken) {
         return res.status(401).json({ message: 'Unauthorized: Missing token' });
@@ -142,20 +147,55 @@ const studentForm = (req, res) => {
     });
 };
 
-// const studentForm = (req, res) => {
-//     const errors = validationResult(req);
-
-//     if (!errors.isEmpty()) {
-//         return res.status(400).json({ errors: errors.array() });
-//     }
-// }
-
 const teacherForm = (req, res) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
+
+    const authToken = req.cookies.token;
+    if (!authToken) {
+        return res.status(401).json({ message: 'Unauthorized: Missing token' });
+    }
+    const decode = jwt.verify(authToken, JWT_SECRET);
+    if (!decode) {
+        return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+    }
+    var registerationOption = req.body.registration_option === 'coming' ? true : false;
+
+
+    const teacherSql = `INSERT INTO Teachers (UserId, Department, DietaryPreferences, RegistrationStatus) VALUES (${db.escape(decode.id)}, ${db.escape(req.body.department)}, ${db.escape(req.body.dietary_preferences)}, ${db.escape(registerationOption)})`;
+    // const teacherSql = `select * from users;`;
+
+    db.query(teacherSql, (err, teacherResult) => {
+        if (err) {
+            return res.status(500).send({ msg: err });
+        }
+        
+        // const familyMembersData = [];
+        const numFamilyMembers = parseInt(req.body.family_members);
+        for (let i = 1; i <= numFamilyMembers; i++) {
+            const familyMemberName = req.body[`family_member_${i}_name`] || ''; // Set to empty string if undefined
+            const familyMemberContact = req.body[`family_member_${i}_contact`] || ''; // Set to empty string if undefined
+            const familyMemberCnic = req.body[`family_member_${i}_cnic`] || ''; // Set to empty string if undefined
+
+            // Check if any of the family member fields are defined
+            if (familyMemberName || familyMemberContact || familyMemberCnic) {
+                const familySql = `INSERT INTO FamilyMembers (Name, Contact, CNIC, UserId) VALUES (?, ?, ?, ?)`;
+                const familyValues = [familyMemberName, familyMemberContact, familyMemberCnic, decode.id];
+
+                db.query(familySql, familyValues, (err, familyResult) => {
+                    if (err) {
+                        return res.status(500).send({ msg: err });
+                    }
+
+                    console.log(`Family member ${i} inserted successfully`);
+                });
+            }
+        }
+        return res.render('./home');
+    });
 }
 
 const getHome = (req, res) => {
