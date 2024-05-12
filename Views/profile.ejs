@@ -44,10 +44,33 @@
     </header>
     <h1>User Profile</h1>
     <div>
-        <p><strong>User ID:</strong> <%= data.UserId %></p>
-        <p><strong>Name:</strong> <%= data.Name %></p>
-        <p><strong>Email:</strong> <%= data.Email %></p>
-        <p><strong>User Type:</strong> <%= data.UserType %></p>
+        <div>
+            <p><strong>User ID:</strong> <%= userData.UserId %></p>
+            <p><strong>Name:</strong> <%= userData.Name %></p>
+            <p><strong>Email:</strong> <%= userData.Email %></p>
+            <p><strong>User Type:</strong> <%= userData.UserType %></p>
+        </div>
+
+       
+
+        <% if (userExtendedData) { %>
+            <h2>Teacher Data</h2>
+            <% if (userExtendedData.RollNo) { %>
+                <p><strong>Roll Number:</strong> <%= userExtendedData.RollNo %></p>
+                <% } %>
+            <p><strong>Department:</strong> <%= userExtendedData.Department %></p>
+            <p><strong>Dietary Preferences:</strong> <%= userExtendedData.DietaryPreferences %></p>
+            <p><strong>Registration Status:</strong> <%= userExtendedData.RegistrationStatus ? 'Registered' : 'Not Registered' %></p>
+        <% } %>
+
+        <% if (familyData) { %>
+            <h2>Family Member Data</h2>
+            <% familyData.forEach(member => { %>
+                <p><strong>Name:</strong> <%= member.Name %></p>
+                <p><strong>Contact:</strong> <%= member.Contact %></p>
+                <p><strong>CNIC:</strong> <%= member.CNIC %></p>
+            <% }) %>
+        <% } %>
     </div>
 </body>
 </html>
