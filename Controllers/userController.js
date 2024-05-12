@@ -187,9 +187,9 @@ const teacherForm = (req, res) => {
 
                 db.query(familySql, familyValues, (err, familyResult) => {
                     if (err) {
-                        return res.status(500).send({ msg: err });
+                        return res.status(500).send({ msg: err }); 
                     }
-
+                    // log msg
                     console.log(`Family member ${i} inserted successfully`);
                 });
             }
@@ -197,7 +197,7 @@ const teacherForm = (req, res) => {
         return res.render('./home');
     });
 }
-
+ 
 const getHome = (req, res) => {
     if (!req.user) {
         return res.status(400).json({ message: 'Please provide a valid Token' });
