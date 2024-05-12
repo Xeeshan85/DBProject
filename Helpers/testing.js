@@ -37,20 +37,10 @@ exports.loginValidation = [
     check('email', 'Enter a valid Email.').isEmail().normalizeEmail({ gmail_remove_dots: true }),
     check('password', 'Name is Required').not().isEmpty().isLength({ min:6 })
 ]
-
-
 const rollNumberPattern = /^(00|01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|21|22|23)[ijklp][0-9]{4}$/;
-
 exports.studentFormValidation = [
     // Validate name field
     check('name', 'Name is required').not().isEmpty(),
-    check('name', 'Name should not be numeric').custom((value, { req }) => {
-        // Custom validation logic for name field
-        if (!isNaN(value)) { // Check if the value is a number
-            throw new Error('Name should not be numeric');
-        }
-        return true;
-    }),
 
     // Validate roll_number field with custom pattern
     check('roll_number', 'Invalid Roll Number').matches(rollNumberPattern),
@@ -60,17 +50,19 @@ exports.studentFormValidation = [
 
     // Validate registration_option field
     check('registration_option', 'Registration Option is required').not().isEmpty(),
-
+    check('dietary_preferences').optional(),
     // Validate family_members field
-//    check('family_members', 'Number of Family Members must be between 0 and 3').isInt({ min: 0, max: 3 })
-
-    // Custom validation for family member 1 fields based on selected number of family members
     
-    // Add custom validations for other family member fields if needed
 ];
 
-
 exports.teacherFormValidation = [
-    // check('email', 'Enter a valid Email.').isEmail().normalizeEmail({ gmail_remove_dots: true }),
-    // check('password', 'Name is Required').not().isEmpty().isLength({ min:6 })
+    check('name', 'Name is required').not().isEmpty(),
+    check('name', 'Name should not be numeric').custom((value, { req }) => {
+        // Custom validation logic for name field
+        if (!isNaN(value)) { // Check if the value is a number
+            throw new Error('Name should not be numeric');
+        }
+        return true;
+    }),
+    check('dietary_preferences').optional(),
 ]
