@@ -166,6 +166,18 @@ const postVolunteer = (req, res) => {
     });
 };
 
+const getMenu = (req, res) => {
+    const userId = req.user.id;
+
+    db.query('SELECT d.ItemId, d.Name, d.Description, COUNT(v.ItemId) AS TotalVotes FROM DinnerItems d LEFT JOIN DinnerVotes v ON d.ItemId = v.ItemId GROUP BY d.ItemId, d.Name, d.Description', (error, results) => {
+        if (error) {
+            console.error('Error fetching dinner items:', error);
+            return res.status(500).send({ message: 'Error fetching dinner items' });
+        }
+
+        res.render('DinnerMenu', { dinnerItems: results });
+    });
+};
 
 
 
@@ -173,5 +185,6 @@ module.exports = {
     getProfile,
     logout,
     getVolunteer,
-    postVolunteer
+    postVolunteer,
+    getMenu
 }

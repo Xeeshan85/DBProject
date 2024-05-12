@@ -1,5 +1,6 @@
+-- ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'KITa-@2247493$';
 create database FareWell;
-drop database farewell;
+-- drop database farewell;
 use FareWell;
 
 
@@ -45,6 +46,14 @@ CREATE TABLE FamilyMembers (
 );
 
 
+CREATE TABLE Users (
+    UserId INT AUTO_INCREMENT PRIMARY KEY,
+    Name VARCHAR(100),
+    Email VARCHAR(100),
+    Password TEXT,
+    UserType ENUM('student', 'teacher', 'admin') DEFAULT 'student'
+);
+
 CREATE TABLE Tasks (
 	TaskId INT AUTO_INCREMENT PRIMARY KEY,
     Name varchar(100),
@@ -55,42 +64,45 @@ insert into Tasks (Name, Description) values ('Food', 'Volunteer will be respons
 CREATE TABLE StudentTasks (
     UserId INT,
     TaskId INT,
-    PRIMARY KEY (StudentId, TaskId),
+    PRIMARY KEY (UserId, TaskId),
     FOREIGN KEY (UserId) REFERENCES Users(UserId),
     FOREIGN KEY (TaskId) REFERENCES Tasks(TaskId)
 );
 
-
-select * from Tasks;
-
-
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'KITa-@2247493$';
-
--- 		rollNo INT,
--- 		Batch INT,
---     Department INT,
---     contact INT,
---     RegisterationStatus BOOLEAN,
---     Dietary_preferences INT
+CREATE TABLE DinnerItems (
+    ItemId INT AUTO_INCREMENT PRIMARY KEY,
+    Name VARCHAR(100),
+    Description TEXT
+);
+INSERT INTO DinnerItems (Name, Description) values ('Nihari', 'Pakistani Dish');
+INSERT INTO DinnerItems (Name, Description) values ('Biryani', 'Pakistans Special');
 
 
--- Create FamilyMembers table
-CREATE TABLE FamilyMembers (
-    FamilyId INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE DinnerVotes (
     UserId INT,
-    Name VARCHAR(255),
-    CNIC INT,
-    Contact INT,
-    FOREIGN KEY (user_id) REFERENCES `User`(UserId)
+    ItemId INT,
+    PRIMARY KEY (UserId, ItemId),
+    FOREIGN KEY (UserId) REFERENCES Users(UserId),
+    FOREIGN KEY (ItemId) REFERENCES DinnerItems(ItemId)
 );
 
--- Create FoodItems table
-CREATE TABLE FoodItems (
-    FoodId INT AUTO_INCREMENT PRIMARY KEY,
-    FoodName VARCHAR(255),
-    FoodItem VARCHAR(255),
-    Votes INT
-);
+
+
+
+select * from DinnerItems;
+
+
+
+
+
+SELECT Tasks.Name, Tasks.Description
+FROM StudentTasks
+JOIN Tasks ON StudentTasks.TaskId = Tasks.TaskId
+WHERE StudentTasks.UserId = 2;
+
+
+
+
 
 -- Create Performance_Proposals table
 CREATE TABLE Performance_Proposals (
@@ -105,27 +117,6 @@ CREATE TABLE Performance_Proposals (
     FOREIGN KEY (UserID) REFERENCES `User`(UserId)
 );
 
--- Create Volunteers table
-CREATE TABLE Volunteers (
-    VolunteerId INT AUTO_INCREMENT PRIMARY KEY,
-    userID INT,
-    Task INT,
-    FOREIGN KEY (userID) REFERENCES `User`(UserId)
-);
 
--- login 
-CREATE TABLE student_credential (
-    rollNo INT PRIMARY KEY,
-    name VARCHAR(100),
-    email VARCHAR(100),
-    password VARCHAR(100)
-);
-select*from student_credential;
-
-SELECT * FROM student_credential WHERE email = 'example@email.com' AND password = 'password123';
-
-select * from student_credential;
-insert into student_credential (rollNo, name, email, password)
-values (123, 'zeeshan', 'shan@gmail.com', '1234');
 
 

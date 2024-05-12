@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dinner Menu</title>
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px;
+            display: inline-block;
+            width: 200px;
+        }
+        h2 {
+            color: #4CAF50;
+        }
+        p {
+            color: #333;
+        }
+        .vote-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dinner Menu</h1>
+    <% dinnerItems.forEach(item => { %>
+        <div class="card">
+            <h2><%= item.Name %></h2>
+            <p><%= item.Description %></p>
+            <p>Total Votes: <%= item.TotalVotes %></p>
+            <form action="/vote" method="post">
+                <input type="hidden" name="itemId" value="<%= item.ItemId %>">
+                <button type="submit" class="vote-btn">Vote</button>
+            </form>
+        </div>
+    <% }); %>
+</body>
+</html>
