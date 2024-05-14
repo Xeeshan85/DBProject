@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <style>
+        /* Style for header */
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        header button {
+            background-color: #555;
+            color: white;
+            padding: 5px 10px;
+            margin: 0 10px;
+            border: none;
+            cursor: pointer;
+        }
+        /* Style for hovering division */
+        .farewell-registration {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #ddd;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+        .farewell-registration:hover {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <form action="/adminHome" method="get">
+            <button type="submit">Home</button>
+        </form>
+    </header>
+    <div>
+        <br>
+        <!-- Form to add new task -->
+        <form action="/budget" method="post">
+            <label for="taskName">Task Name:</label>
+            <input type="text" id="taskName" name="taskName" required>
+            <label for="taskDescription">Task Description:</label>
+            <input type="text" id="taskDescription" name="taskDescription" required>
+            <!-- Add budget allocation fields -->
+            <label for="allocateBudget">Allocate Budget:</label>
+            <input type="number" id="allocateBudget" name="allocateBudget" required>
+            <button type="submit">Add Task</button>
+        </form>
+
+
+        <!-- Display existing tasks -->
+        <% if (Array.isArray(taskResults)) { %> <!-- Check if taskResults is an array -->
+            <ul>
+                <% taskResults.forEach(task => { %>
+                    <li>
+                        <input type="checkbox" name="tasks[]" value="<%= task.TaskId %>">
+                        <label for="<%= task.TaskId %>"><%= task.Name %> : <%= task.Description %> - <%= task.Budget %></label>
+                        <!-- Add remove button for each task -->
+                        <form action="/budget/remove/<%= task.TaskId %>" method="post" style="display: inline;">
+                            <button type="submit">Remove</button>
+                        </form>
+                        <!-- Add edit button for each task -->
+                        <form action="/budget/edit/<%= task.TaskId %>" method="get" style="display: inline;">
+                            <button type="submit">Edit</button>
+                        </form>
+                    </li>
+                <% }); %>
+            </ul>
+        <% } else { %>
+            <p>No tasks found</p>
+        <% } %>
+
+        
+    </div>
+</body>
+</html>

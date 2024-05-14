@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { signUpValidation, loginValidation, studentFormValidation } = require('../Helpers/validator');
+const { signUpValidation, loginValidation } = require('../Helpers/validator');
 
-const userController = require('../Controllers/userController')
-const homeController = require('../Controllers/homeController')
+const userController = require('../Controllers/userController');
+const homeController = require('../Controllers/homeController');
+const { getAdminHome } = require('../Controllers/adminController');
 
 // Route for rendering the registration page
 router.get('/register', (req, res) => {
@@ -47,5 +48,16 @@ router.get('/DinnerMenu', userController.isAuthorized, homeController.getMenu);
 router.get('/proposals', userController.isAuthorized, homeController.getProposals);
 
 
+router.get('/adminHome', userController.isAdmin, userController.getAdminHome);
+router.get('/announcements', userController.isAdmin, homeController.getAnnouncements);
+router.post('/addAnnouncement', userController.isAuthorized, homeController.addAnnouncement);
+
+router.get('/budget', userController.isAdmin, homeController.getBudget);
+router.post('/budget', userController.isAdmin, homeController.addTaskToBudget);
+router.post('/budget', userController.isAdmin, homeController.editTaskInBudget);
+router.post('/budget', userController.isAdmin, homeController.removeTaskFromBudget);
+
+
+router.get('/promotions', userController.isAdmin, homeController.getPromotions);
 
 module.exports = router;

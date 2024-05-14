@@ -93,17 +93,19 @@
         </form>
     </div>
     <h1>Dinner Menu</h1>
-    <% dinnerItems.forEach(item => { %>
-        <div class="card">
-            <h2><%= item.Name %></h2>
-            <p><%= item.Description %></p>
-            <p>Total Votes: <%= item.TotalVotes %></p>
-            <form action="/dinnerVote" method="post">
-                <input type="hidden" name="itemId" value="<%= item.ItemId %>">
-                <button type="submit" class="vote-btn">Vote</button>
-            </form>
-        </div>
-    <% }); %>
-
+    <% if (dinnerItems) { %>
+        <% dinnerItems.forEach(item => { %>
+            <div class="card">
+                <h2><%= item.Name %></h2>
+                <p><%= item.Description %></p>
+                <p>Total Votes: <%= item.TotalVotes %></p>
+                <form action="/dinnerVote" method="post">
+                    <input type="hidden" name="itemId" value="<%= item.ItemId %>">
+                    <button type="submit" class="vote-btn">Vote</button>
+                </form>
+            </div>
+        <% }); %>
+    <% } %>
+    
 </body>
 </html>

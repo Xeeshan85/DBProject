@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <style>
+        /* Style for header */
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        header button {
+            background-color: #555;
+            color: white;
+            padding: 5px 10px;
+            margin: 0 10px;
+            border: none;
+            cursor: pointer;
+        }
+        /* Style for hovering division */
+        .farewell-registration {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #ddd;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+        .farewell-registration:hover {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <form action="/home/Profile" method="get">
+            <button type="submit">Profile</button>
+        </form>
+        <form action="/logout" method="get">
+            <button type="submit">Logout</button>
+        </form>
+    </header>
+    <h1>Admin Home</h1>
+    <div>
+
+        <form action="/announcements" method="get">
+            <button type="submit">Announcement</button>
+        </form>
+
+        <form action="/budget" method="get">
+            <button type="submit">Budget & Tasks</button>
+        </form>
+
+        <form action="/promotions" method="get">
+            <button type="submit">Promotions</button>
+        </form>
+       
+    </div>
+
+    <!-- Display attending students count -->
+    <div>
+        <h2>Attending Students/Teachers Count: <%= attendingPeopleCount %></h2>
+    </div>
+</body>
+</html>

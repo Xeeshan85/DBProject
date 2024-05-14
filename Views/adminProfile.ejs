@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <style>
+        /* Style for header */
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        header button {
+            background-color: #555;
+            color: white;
+            padding: 5px 10px;
+            margin: 0 10px;
+            border: none;
+            cursor: pointer;
+        }
+        /* Style for hovering division */
+        .farewell-registration {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #ddd;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+        .farewell-registration:hover {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <form action="/home" method="get">
+            <button type="submit">Home</button>
+        </form>
+        <form action="/logout" method="get">
+            <button type="submit">Logout</button>
+        </form>
+    </header>
+    <h1>Admin Profile</h1>
+    <div>
+        <div>
+            <p><strong>User ID:</strong> <%= userData.UserId %></p>
+            <p><strong>Name:</strong> <%= userData.Name %></p>
+            <p><strong>Email:</strong> <%= userData.Email %></p>
+            <p><strong>User Type:</strong> <%= userData.UserType %></p>
+        </div>
+
+       
+    </div>
+</body>
+</html>

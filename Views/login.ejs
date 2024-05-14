@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,42 +9,86 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
+            background-color: #f9f9f9; /* Light gray background */
         }
+
         .container {
-            margin-top: 100px;
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 20px;
+            background-color: #fff; /* White container background */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add some depth */
         }
-        .btn {
+
+        h1 {
+            color: #333; /* Dark heading color */
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333; /* Dark text color */
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button[type="submit"] {
             display: inline-block;
             padding: 10px 20px;
             font-size: 18px;
             text-decoration: none;
             color: #fff;
-            background-color: #007bff;
+            background-color: #007bff; /* Blue button background */
             border-radius: 5px;
-            margin: 10px;
+            margin-right: 10px;
+            border: none;
+            cursor: pointer;
         }
-        .btn:hover {
-            background-color: #0056b3;
+
+        button[type="submit"]:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+        .register-link {
+            display: block;
+            margin-top: 20px;
+            color: #007bff; /* Blue link color */
+            text-decoration: none;
+        }
+
+        .register-link:hover {
+            text-decoration: underline; /* Underline on hover */
         }
     </style>
 </head>
+
 <body>
-    <h1>User Login</h1>
-    <% if (typeof errorMsg !== 'undefined') { %>
+    <div class="container">
+        <h1>User Login</h1>
+        <% if (typeof errorMsg !== 'undefined') { %>
         <p style="color: red;"><%= errorMsg %></p>
-    <% } %>
-    <form action="/login" method="post">
-        <div>
+        <% } %>
+        <form action="/login" method="post">
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" required>
-        </div>
-        <div>
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
-        </div>
-        <button type="submit">Login</button>
-        <a href="/register" class="btn">Sign Up</a>
-    </form>
-    
+            <button type="submit">Login</button>
+        </form>
+        <a href="/register" class="register-link">Don't have an account? Register here.</a>
+    </div>
 </body>
+
 </html>

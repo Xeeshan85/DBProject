@@ -1,112 +1,203 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Registration</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        input,
+        select {
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
         .hidden {
             display: none;
         }
+
+        .error {
+            color: red;
+            font-size: 12px;
+        }
     </style>
 </head>
+
 <body>
-    <h1>Student Registration Form</h1>
-    <form action="/studentForm" method="post">
-        <div>
-            <label for="name">Full Name:</label>
-            <input type="text" id="name" name="name" required>
-        </div>
-        <div>
-            <label for="roll_number">Roll Number:</label>
-            <input type="text" id="roll_number" name="roll_number" required>
-        </div>
-        <div>
-            <label for="department">Department:</label>
-            <select id="department" name="department" required>
-                <option value="">Select Department</option>
-                <option value="AI">Artificial Intelligence (AI)</option>
-                <option value="CS">Computer Science (CS)</option>
-                <option value="SE">Software Engineering (SE)</option>
-                <option value="DS">Data Science (DS)</option>
-            </select>
-        </div>
-        <div>
-            <label for="dietary_preferences">Dietary Preferences:</label>
-            <input type="text" id="dietary_preferences" name="dietary_preferences">
-        </div>
-        <div>
-            <label for="registration_option">Registration Option:</label>
-            <!-- <input type="hidden" id="registration_status" name="registration_status" value="false"> -->
-            <select id="registration_option" name="registration_option">
-                <option value="coming">Coming</option>
-                <option value="not coming">Not Coming</option>
-            </select>
-        </div>
-        <div>
-            <label for="family_members">Number of Family Members:</label>
-            <select id="family_members" name="family_members">
-                <option value="0">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-            </select>
-        </div>
-        <div id="family_members_fields">
-            <!-- Family members input fields will be inserted here based on selection -->
-            <div id="family_member_1" class="hidden">
-                <label for="family_member_1_name">Family Member 1 Name:</label>
-                <input type="text" id="family_member_1_name" name="family_member_1_name">
-                <label for="family_member_1_contact">Family Member 1 Contact:</label>
-                <input type="text" id="family_member_1_contact" name="family_member_1_contact">
-                <label for="family_member_1_cnic">Family Member 1 CNIC:</label>
-                <input type="text" id="family_member_1_cnic" name="family_member_1_cnic">
+    <div class="container">
+        <h1>Student Registration Form</h1>
+        <form action="/studentForm" method="post" onsubmit="return validateForm()">
+            <div>
+                <label for="name">Full Name:</label>
+                <input type="text" id="name" name="name" required pattern="[a-zA-Z\s]+" title="Name should only contain non-numeric characters">
             </div>
-            <div id="family_member_2" class="hidden">
-                <label for="family_member_2_name">Family Member 2 Name:</label>
-                <input type="text" id="family_member_2_name" name="family_member_2_name">
-                <label for="family_member_2_contact">Family Member 2 Contact:</label>
-                <input type="text" id="family_member_2_contact" name="family_member_2_contact">
-                <label for="family_member_2_cnic">Family Member 2 CNIC:</label>
-                <input type="text" id="family_member_2_cnic" name="family_member_2_cnic">
+            <div>
+                <label for="roll_number">Roll Number:</label>
+                <input type="text" id="roll_number" name="roll_number" required>
             </div>
-            <div id="family_member_3" class="hidden">
-                <label for="family_member_3_name">Family Member 3 Name:</label>
-                <input type="text" id="family_member_3_name" name="family_member_3_name">
-                <label for="family_member_3_contact">Family Member 3 Contact:</label>
-                <input type="text" id="family_member_3_contact" name="family_member_3_contact">
-                <label for="family_member_3_cnic">Family Member 3 CNIC:</label>
-                <input type="text" id="family_member_3_cnic" name="family_member_3_cnic">
+            <div>
+                <label for="department">Department:</label>
+                <select id="department" name="department" required>
+                    <option value="">Select Department</option>
+                    <option value="AI">Artificial Intelligence (AI)</option>
+                    <option value="CS">Computer Science (CS)</option>
+                    <option value="SE">Software Engineering (SE)</option>
+                    <option value="DS">Data Science (DS)</option>
+                </select>
             </div>
-        </div>
-        <input type="hidden" name="userType" value="student">
-        <button type="submit">SUBMIT</button>
-    </form>
+            <div>
+                <label for="dietary_preferences">Dietary Preferences:</label>
+                <input type="text" id="dietary_preferences" name="dietary_preferences">
+            </div>
+            <div>
+                <label for="registration_option">Registration Option:</label>
+                <!-- <input type="hidden" id="registration_status" name="registration_status" value="false"> -->
+                <select id="registration_option" name="registration_option">
+                    <option value="coming">Coming</option>
+                    <option value="not coming">Not Coming</option>
+                </select>
+            </div>
+            <div>
+                <label for="family_members">Number of Family Members:</label>
+                <select id="family_members" name="family_members">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+            </div>
+            <div id="family_members_fields">
+                <!-- Family members input fields will be inserted here based on selection -->
+                <div id="family_member_1" class="hidden">
+                    <input type="text" id="family_member_1_name" placeholder="Family Member Name" name="family_member_1_name">
+                    <input type="text" id="family_member_1_contact" name="family_member_1_contact" placeholder="Family Member Contact">
+                    <input type="text" id="family_member_1_cnic" name="family_member_1_cnic", placeholder="Family Member CNIC">
+                </div>
+                <div id="family_member_2" class="hidden">
+                    <input type="text" id="family_member_2_name" name="family_member_2_name"  placeholder="Family Member Name">
+                    <input type="text" id="family_member_2_contact" name="family_member_2_contact" placeholder="Family Member Contact">
+                    <input type="text" id="family_member_2_cnic" name="family_member_2_cnic" placeholder="Family Member CNIC">
+                </div>
+                <div id="family_member_3" class="hidden">
+                    <input type="text" id="family_member_3_name" name="family_member_3_name" placeholder="Family Member Name">
+                    <input type="text" id="family_member_3_contact" name="family_member_3_contact" placeholder="Family Member Contact">
+                    <input type="text" id="family_member_3_cnic" name="family_member_3_cnic" placeholder="Family Member CNIC">
+                </div>
+            </div>
+            <input type="hidden" name="userType" value="student">
+            <button type="submit">SUBMIT</button>
+        </form>
+    </div>
 
     <script>
+        function validateForm() {
+            var rollNumber = document.getElementById('roll_number').value;
+            var rollNumberPattern = /^(0[0-9]|1\d|2[0-3])[IILPKF]\d{4}$/; // Regular expression pattern for the roll number format
+            if (!rollNumberPattern.test(rollNumber)) {
+                alert('Roll number should be in the format 23IXXXX (I can be replaced with L, P, K, or F(Captial letters))');
+                return false;
+            }
+    
+            var familyMembers = parseInt(document.getElementById('family_members').value);
+            for (var i = 1; i <= familyMembers; i++) {
+                var cnic = document.getElementById('family_member_' + i + '_cnic').value;
+                var contact = document.getElementById('family_member_' + i + '_contact').value;
+                var name = document.getElementById('family_member_' + i + '_name').value;
+                var cnicPattern = /^\d{13}$/;
+                var contactPattern = /^\d{11}$/;
+                var namePattern = /^[a-zA-Z\s]+$/;
+                if (!cnicPattern.test(cnic)) {
+                    alert('Family Member ' + i + ' CNIC should be 13 digits');
+                    return false;
+                }
+                if (!contactPattern.test(contact)) {
+                    alert('Family Member ' + i + ' Contact should be 11 digits');
+                    return false;
+                }
+                if (!namePattern.test(name)) {
+                    alert('Family Member ' + i + ' Name should only contain non-numeric characters');
+                    return false;
+                }
+            }
+            return true;
+        }
+    
         document.getElementById('family_members').addEventListener('change', function() {
             var numFamilyMembers = parseInt(this.value);
             var familyMembersFields = document.getElementById('family_members_fields').children;
-            
-            // Hide all family member fields
+
+            // Hide all family member fields and remove existing headings
             for (var i = 0; i < familyMembersFields.length; i++) {
-                familyMembersFields[i].classList.add('hidden');
+                var currentFamilyMember = familyMembersFields[i];
+                currentFamilyMember.classList.add('hidden');
+
+                // Remove existing heading if it exists
+                var existingHeading = currentFamilyMember.querySelector('h3');
+                if (existingHeading) {
+                    existingHeading.remove();
+                }
             }
 
-            // Show family member fields based on selection
+            // Show family member fields and add headings based on selection
             for (var i = 0; i < numFamilyMembers; i++) {
-                familyMembersFields[i].classList.remove('hidden');
+                var currentFamilyMember = familyMembersFields[i];
+                currentFamilyMember.classList.remove('hidden');
+
+                // Add heading for each family member
+                var heading = document.createElement('h3');
+                heading.textContent = 'Family Member ' + (i + 1);
+                currentFamilyMember.insertBefore(heading, currentFamilyMember.firstChild);
             }
         });
 
-        document.getElementById('registration_option').addEventListener('change', function() {
-            var registration_option_value = this.value;
-            if (registration_option_value === 'coming') {
-                document.getElementById('registration_status').value = 'true';
-            } else {
-                document.getElementById('registration_status').value = 'false';
-            }
-        });
     </script>
+    
 </body>
+
 </html>

@@ -168,6 +168,7 @@ const postVolunteer = (req, res) => {
 
 const getMenu = (req, res) => {
     const userId = req.user.id;
+    // console.log('Dinner Called');
 
     db.query('SELECT d.ItemId, d.Name, d.Description, COUNT(v.ItemId) AS TotalVotes FROM DinnerItems d LEFT JOIN DinnerVotes v ON d.ItemId = v.ItemId GROUP BY d.ItemId, d.Name, d.Description', (error, results) => {
         if (error) {
@@ -330,6 +331,121 @@ const voteProposal = (req, res) => {
 };
 
 
+// =========================================================================================================
+
+const getAnnouncements = (req, res) => {
+    if (!req.user) {
+        return res.status(400).json({ message: 'Please provide a valid Token' });
+    }
+    db.query('SELECT * from Announcement;', (error, results) => {
+        if (error) {
+            return res.status(500).send({ message: 'Error fetching proposals' });
+        }
+
+        // Render the proposals.ejs view with the fetched data
+        return res.render('announcements', { announcements: results });
+        // return res.render('./announcements'); // Use absolute path
+    });
+}
+
+const addAnnouncement = (req, res) => {
+    const { description } = req.body;
+    if (!description) {
+        return res.status(400).json({ message: 'Description is required' });
+    }
+
+    db.query('INSERT INTO Announcement (Description) VALUES (?)', [description], (error, result) => {
+        if (error) {
+            return res.status(500).json({ message: 'Error adding announcement' });
+        }
+        return res.redirect('/announcements');
+    });
+};
+
+const getBudget = (req, res) => {
+    if (!req.user) {
+        return res.status(400).json({ message: 'Please provide a valid Token' });
+    }
+
+    db.query('SELECT * FROM Tasks;', (error, taskResults) => {
+        if (error) {
+            return res.status(500).send({ message: 'Error fetching user data' });
+        }
+
+        if (taskResults.length === 0) {
+            return res.status(404).send({ message: 'Tasks not found' });
+        }
+
+        return res.render('./budget', { taskResults }); // Pass taskResults directly
+    });
+}
+
+const addTaskToBudget = (req, res) => {
+    // console.log('imadgas');
+    const { taskName, taskDescription, allocateBudget } = req.body;
+
+    // Check if task already exists in the database
+    db.query('SELECT * FROM Tasks WHERE Name = ? AND Description = ?', [taskName, taskDescription], (error, existingTasks) => {
+        if (error) {
+            return res.status(500).send({ message: 'Error checking existing tasks' });
+        }
+
+        if (existingTasks.length > 0) {
+            return res.status(400).send({ message: 'Task already exists' });
+        }
+        console.log(allocateBudget);
+        // Insert new task into the database
+        db.query('INSERT INTO Tasks (Name, Description, Budget) VALUES (?, ?, ?)', [taskName, taskDescription, allocateBudget], (error, result) => {
+            // db.query('select * from users', (error, result) => {
+            if (error) {
+                return res.status(500).send({ message: 'Error adding task' });
+            }
+
+            // Redirect to the budget page after adding the task
+            return res.redirect('/budget');
+        });
+    });
+}
+
+const removeTaskFromBudget = (req, res) => {
+    const taskId = req.params.taskId;
+
+    // Query to delete the task from the database
+    db.query('DELETE FROM Tasks WHERE TaskId = ?', [taskId], (error, result) => {
+        if (error) {
+            return res.status(500).send({ message: 'Error removing task' });
+        }
+
+        // Redirect back to the budget page after removing the task
+        return res.redirect('/budget');
+    });
+}
+
+const editTaskInBudget = (req, res) => {
+    const taskId = req.params.taskId;
+
+    // Query to fetch the task details for editing
+    db.query('SELECT * FROM Tasks WHERE TaskId = ?', [taskId], (error, task) => {
+        if (error) {
+            return res.status(500).send({ message: 'Error fetching task for editing' });
+        }
+
+        if (!task || task.length === 0) {
+            return res.status(404).send({ message: 'Task not found' });
+        }
+
+        // Render the edit task form with the task details
+        return res.render('editTask', { task });
+    });
+}
+
+const getPromotions = (req, res) => {
+    if (!req.user) {
+        return res.status(400).json({ message: 'Please provide a valid Token' });
+    }
+
+    return res.render('./promotions');
+}
 
 module.exports = {
     getProfile,
@@ -340,5 +456,12 @@ module.exports = {
     addDinnerItem,
     dinnerVote,
     getProposals,
-    voteProposal
+    voteProposal,
+    getAnnouncements,
+    addAnnouncement,
+    getBudget,
+    addTaskToBudget,
+    removeTaskFromBudget,
+    editTaskInBudget,
+    getPromotions
 }

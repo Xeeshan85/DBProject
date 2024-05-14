@@ -13,7 +13,7 @@
                 <% taskResults.forEach(task => { %>
                     <li>
                         <input type="checkbox" name="tasks[]" value="<%= task.TaskId %>">
-                        <label for="<%= task.TaskId %>"><%= task.Name %> - <%= task.Description %></label>
+                        <label for="<%= task.TaskId %>"><%= task.Name %> : <%= task.Description %> - <%= task.Budget %></label>
                     </li>
                 <% }); %>
             </ul>

@@ -8,52 +8,128 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
+            background-color: #f9f9f9; /* Light gray background */
         }
         .container {
-            margin-top: 100px;
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 20px;
+            background-color: #fff; /* White container background */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add some depth */
         }
-        .btn {
+        h1 {
+            color: #333; /* Dark heading color */
+        }
+        form {
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333; /* Dark text color */
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        select {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button[type="submit"] {
             display: inline-block;
             padding: 10px 20px;
             font-size: 18px;
             text-decoration: none;
             color: #fff;
-            background-color: #007bff;
+            background-color: #007bff; /* Blue button background */
             border-radius: 5px;
-            margin: 10px;
+            margin-right: 10px;
+            border: none;
+            cursor: pointer;
         }
-        .btn:hover {
-            background-color: #0056b3;
+        button[type="submit"]:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+        .login-link {
+            display: block;
+            margin-top: 20px;
+            color: #007bff; /* Blue link color */
+            text-decoration: none;
+        }
+        .login-link:hover {
+            text-decoration: underline; /* Underline on hover */
+        }
+        .error-msg {
+            color: red;
+            margin-top: -10px;
+            margin-bottom: 10px;
+            text-align: left;
         }
     </style>
 </head>
 <body>
-    <h1>User Registration</h1>
-    <% if (typeof errorMsg !== 'undefined') { %>
-        <p style="color: red;"><%= errorMsg %></p>
-    <% } %>
-    <form action="/register" method="post">
-        <div>
+    <div class="container">
+        <h1>User Registration</h1>
+        <% if (typeof errorMsg !== 'undefined') { %>
+            <p class="error-msg"><%= errorMsg %></p>
+        <% } %>
+        <form action="/register" method="post" onsubmit="return validateForm()">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required>
-        </div>
-        <div>
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" required>
-        </div>
-        <div>
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
-        </div>
-        <div>
             <label for="userType">User Type:</label>
             <select id="userType" name="userType">
                 <option value="student">Student</option>
                 <option value="teacher">Teacher</option>
             </select>
-        </div>
-        <button type="submit">Register</button>
-        <a href="/login" class="btn">Login</a>
-    </form>
+            <button type="submit">Register</button>
+        </form>
+        <a href="/login" class="login-link">Already have an account? Login here.</a>
+    </div>
+
+    <script>
+        function validateForm() {
+            var password = document.getElementById("password").value;
+            var email = document.getElementById("email").value;
+
+            // Password validation
+            var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{6,20}$/;
+            if (!passwordRegex.test(password)) {
+                alert("Password must be between 6 and 15 characters, containing at least one lowercase letter, one uppercase letter, one digit, and one special character.");
+                return false;
+            }
+
+            // Email validation
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            var validDomains = ["gmail.com", "@nu.edu.pk", "@hotmail.com", "@yahoo.com"];
+            var lowercaseEmail = email.toLowerCase();
+
+            if (!emailRegex.test(lowercaseEmail)) {
+                alert("Invalid email format.");
+                return false;
+            } else {
+                var domain = lowercaseEmail.substring(lowercaseEmail.lastIndexOf("@") + 1); // Extract domain part of the email
+                if (!validDomains.includes(domain)) {
+                    alert("Invalid email domain. Allowed domains are: " + validDomains.join(", "));
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    </script>
 </body>
 </html>

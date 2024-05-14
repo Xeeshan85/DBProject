@@ -13,25 +13,35 @@
             text-align: center;
         }
         header button {
-            background-color: #555;
-            color: white;
-            padding: 5px 10px;
-            margin: 0 10px;
-            border: none;
-            cursor: pointer;
+    background-color: #555;
+    color: white;
+    padding: 5px 10px;
+    margin: 0 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px; /* Adjust the value to change the curve */
+}
+
+        /* Style for main content */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
         }
-        /* Style for hovering division */
-        .farewell-registration {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #ddd;
+        .box {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
             padding: 20px;
-            border-radius: 10px;
-            display: none;
+            margin: 10px;
+            width: 300px;
+            box-sizing: border-box;
         }
-        .farewell-registration:hover {
-            display: block;
+        .box h2 {
+            color: #4CAF50;
+        }
+        .box p {
+            color: #333;
         }
     </style>
 </head>
@@ -39,51 +49,59 @@
     <header>
         <form action="/home" method="get">
             <button type="submit">Home</button>
+            <p></p>
         </form>
-        <form action="/volunteer" method="get">
-            <button type="submit">Volunteer</button>
-        </form>
+        <% if (userData.UserType !== 'admin') { %>
+            <form action="/volunteer" method="get">
+                <button type="submit">Volunteer</button>
+                <p></p>
+            </form>
+        <% } %>
         <form action="/logout" method="get">
             <button type="submit">Logout</button>
+            <p></p>
         </form>
     </header>
     <h1>User Profile</h1>
-    <div>
-        <div>
+    <div class="container">
+        <div class="box">
+            <h2>USER DETAILS</h2>
             <p><strong>User ID:</strong> <%= userData.UserId %></p>
             <p><strong>Name:</strong> <%= userData.Name %></p>
             <p><strong>Email:</strong> <%= userData.Email %></p>
             <p><strong>User Type:</strong> <%= userData.UserType %></p>
-        </div>
-
-       
-
-        <% if (userExtendedData) { %>
-            <h2>Teacher Data</h2>
-            <% if (userExtendedData.RollNo) { %>
-                <p><strong>Roll Number:</strong> <%= userExtendedData.RollNo %></p>
+            <% if (userData.UserType !== 'admin') { %>
+                <% if (userExtendedData && userExtendedData.Department) { %>
+                    <% if (userExtendedData.RollNo) { %>
+                        <p><strong>Roll Number:</strong> <%= userExtendedData.RollNo %></p>
+                    <% } %>
+                    <p><strong>Department:</strong> <%= userExtendedData.Department %></p>
+                    <p><strong>Dietary Preferences:</strong> <%= userExtendedData.DietaryPreferences %></p>
+                    <p><strong>Registration Status:</strong> <%= userExtendedData.RegistrationStatus ? 'Registered' : 'Not Registered' %></p>
                 <% } %>
-            <p><strong>Department:</strong> <%= userExtendedData.Department %></p>
-            <p><strong>Dietary Preferences:</strong> <%= userExtendedData.DietaryPreferences %></p>
-            <p><strong>Registration Status:</strong> <%= userExtendedData.RegistrationStatus ? 'Registered' : 'Not Registered' %></p>
-        <% } %>
+            </div> 
 
-        <% if (familyData) { %>
-            <h2>Family Member Data</h2>
-            <% familyData.forEach(member => { %>
-                <p><strong>Name:</strong> <%= member.Name %></p>
-                <p><strong>Contact:</strong> <%= member.Contact %></p>
-                <p><strong>CNIC:</strong> <%= member.CNIC %></p>
-            <% }) %>
-        <% } %>
+            <% if (familyData && familyData.length > 0) { %>
+                <div class="box">
+                    <h2>Family Member Data</h2>
+                    <% familyData.forEach(member => { %>
+                        <p><strong>Name:</strong> <%= member.Name %></p>
+                        <p><strong>Contact:</strong> <%= member.Contact %></p>
+                        <p><strong>CNIC:</strong> <%= member.CNIC %></p>
+                    <% }) %>
+                </div>
+            <% } %>
 
-        <% if (volunteerResults) { %>
-            <h2>Volunteered Tasks Assigned</h2>
-            <ul>
-                <% volunteerResults.forEach(task => { %>
-                    <li><%= task.Name %> - <%= task.Description %></li>
-                <% }); %>
-            </ul>
+            <% if (volunteerResults && volunteerResults.length > 0) { %>
+                <div class="box">
+                    <h2>Volunteered Tasks Assigned</h2>
+                    <ul>
+                        <% volunteerResults.forEach(task => { %>
+                            <li><%= task.Name %> - <%= task.Description %></li>
+                        <% }); %>
+                    </ul>
+                </div>
+            <% } %>
         <% } %>
     </div>
 </body>

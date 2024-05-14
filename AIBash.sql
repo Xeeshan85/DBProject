@@ -1,6 +1,16 @@
 Create database AIBash;
 
-use AIBash;
+use AIBash;	
+select * from subscribers;
+
+select * from categories;
+select * from projects;
+
+select * from Subscribers s
+left join Transactions t on s.UserId = t.UserId
+left join Projects p on s.UserId = p.UserId
+left join ProjectUpdates pu on p.ProjectId = pu.ProjectId;
+
 
 -- =====================TABLES CREATION=======================
 CREATE TABLE Projects (
@@ -162,7 +172,7 @@ WHERE UserId = 1;
 
 
 -- =============================== QUERIES ===============================
-select * from categories;
+
 
 -- Retrieve Projects along with their Categories
 SELECT p.ProjectId, p.ProjectDescription, p.ProjectStatus, p.BelongingStatus, 

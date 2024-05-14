@@ -20,20 +20,22 @@
             border: none;
             cursor: pointer;
         }
-        /* Style for hovering division */
-        .farewell-registration {
+        /* Style for announcements */
+        .announcements {
             position: fixed;
-            bottom: 20px;
+            top: 20px;
             right: 20px;
-            background-color: #ddd;
-            padding: 20px;
+            background-color: #f00; /* Red background color */
+            color: white;
+            padding: 10px;
             border-radius: 10px;
-            display: none;
-        }
-        .farewell-registration:hover {
-            display: block;
+            max-width: 300px; /* Limit width to prevent overflowing */
+            overflow-y: auto; /* Enable vertical scrolling if content overflows */
+            height: calc(100vh - 100px); /* Set max height to viewport height minus header height and some padding */
         }
     </style>
+</head>
+<body>
     <header>
         <form action="/home/profile" method="get">
             <button type="submit">Profile</button>
@@ -45,9 +47,20 @@
             <button type="submit">Logout</button>
         </form>
     </header>
-</head>
-<body>
+
+    <div class="announcements">
+        <h2>Announcements</h2>
+        <% if (Array.isArray(announcements) && announcements.length > 0) { %>
+            <% announcements.forEach(announcement => { %>
+                <div><%= announcement.Description %></div>
+            <% }); %>
+        <% } else { %>
+            <div>No announcements available.</div>
+        <% } %>
+    </div>
     
+
+
     <h1>Welcome Back! This is gonna be an amazing farewell Experience.</h1>
     <form action="/DinnerMenu" method="get">
         <button type="submit">Dinner Menu</button>

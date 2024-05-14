@@ -4,6 +4,7 @@ create database FareWell;
 use FareWell;
 
 
+
 CREATE TABLE Users (
     UserId INT AUTO_INCREMENT PRIMARY KEY,
     Name VARCHAR(100),
@@ -12,8 +13,15 @@ CREATE TABLE Users (
     UserType ENUM('student', 'teacher', 'admin') DEFAULT 'student'
 );
 
+-- DELETE FROM Users where UserId = 3;
+-- DELETE FROM users WHERE userId = 8;
+
+select * from users;
+
+
 CREATE TABLE Admins (
     UserId INT PRIMARY KEY,
+    
     FOREIGN KEY (UserId) REFERENCES Users(UserId)
 );
 
@@ -45,22 +53,16 @@ CREATE TABLE FamilyMembers (
     FOREIGN KEY (UserId) REFERENCES Users(UserId)
 );
 
-
-CREATE TABLE Users (
-    UserId INT AUTO_INCREMENT PRIMARY KEY,
-    Name VARCHAR(100),
-    Email VARCHAR(100),
-    Password TEXT,
-    UserType ENUM('student', 'teacher', 'admin') DEFAULT 'student'
-);
-
+drop table tasks;
 CREATE TABLE Tasks (
 	TaskId INT AUTO_INCREMENT PRIMARY KEY,
     Name varchar(100),
-    Description text
+    Description text,
+    Budget float
 );
-insert into Tasks (Name, Description) values ('Food', 'Volunteer will be responsible for food quality.');
-
+insert into Tasks (Name, Description, Budget) values ('Food', 'Volunteer will be responsible for food quality.', 125);
+insert into Tasks (Name, Description, Budget) values ('Food', 'Volunteer will be responsible for food quality.', 124);
+select * from tasks;
 CREATE TABLE StudentTasks (
     UserId INT,
     TaskId INT,
@@ -107,9 +109,15 @@ CREATE TABLE ProposalVotes (
     FOREIGN KEY (ProposalId) REFERENCES Proposals(ProposalId)
 );
 
+CREATE TABLE Announcement (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    Description text
+);
+
+INSERT INTO Announcement (Description) Values ('Farewell is happening on 12 march.');
 
 
-select * from DinnerItems;
+select * from Announcement;
 
 
 

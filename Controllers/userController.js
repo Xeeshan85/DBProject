@@ -40,16 +40,38 @@ const register = (req, res) => {
                                 }
                                 
                                 const token = jwt.sign({ id: result.insertId, userType: req.body.userType }, JWT_SECRET, { expiresIn: '1h' });
-                                res.cookie('token', token, { httpOnly: true });
+                                // res.cookie('token', token, { httpOnly: true });
+                                // console.log(token, '\n');
                                 
                                 if (req.body.userType === 'student') {
+                                    res.cookie('token', token, { httpOnly: true });
                                     return res.redirect('studentForm');
                                 } else if (req.body.userType === 'teacher') {
+                                    res.cookie('token', token, { httpOnly: true });
                                     return res.redirect('teacherForm');
+                                } else if (req.body.userType === 'admin') {
+                                    const authToken = token;
+                                    res.cookie('token', token, { httpOnly: true });
+                                    if (!authToken) {
+                                        return res.status(401).json({ message: 'Unauthorized: Missing token' });
+                                    }
+                                    const decode = jwt.verify(authToken, JWT_SECRET);
+                                    if (!decode) {
+                                        return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+                                    }
+                                    
+                                    const studentSql = `INSERT INTO Admins (UserId) VALUES (${db.escape(decode.id)})`;
+                                    // const studentSql = `select * from users;`;
+                                
+                                    db.query(studentSql, (err, studentResult) => {
+                                        if (err) {
+                                            return res.status(500).send({ msg: err });
+                                        }
+                                        return getAdminHome(req, res);
+                                    });
                                 } else {
-                                    // Handle other UserType cases if needed
-                                    return res.status(500).send({
-                                        msg: 'User registered successfully'
+                                    return res.status(400).send({
+                                        msg: 'Invalid User Type.'
                                     });
                                 }
                             }
@@ -85,7 +107,14 @@ const login = (req, res) => {
                     if (bResult) {
                         const token = jwt.sign({ id: result[0]['UserId'], userType: result[0]['UserType'] }, JWT_SECRET, { expiresIn: '1h' });
                         res.cookie('token', token, { httpOnly: true });
-                        return res.redirect('/home');
+                        // console.log(result[0].UserType);
+                        req.user = { id: result[0]['UserId'], userType: result[0]['UserType'] };
+                        if (result[0].UserType === 'admin') {
+                            
+                            return getAdminHome(req, res);
+                        } else {
+                            return getHome(req, res);
+                        }
                         // return res.status(200).send({ msg: 'Logged In', token, user: result[0] });
                     }
 
@@ -114,8 +143,8 @@ const studentForm = (req, res) => {
     var registerationOption = req.body.registration_option === 'coming' ? true : false;
 
 
-    const studentSql = `INSERT INTO Students (UserId, RollNo, Department, DietaryPreferences, RegistrationStatus) VALUES (${db.escape(decode.id)}, ${db.escape(req.body.roll_number)}, ${db.escape(req.body.department)}, ${db.escape(req.body.dietary_preferences)}, ${db.escape(registerationOption)})`;
-    // const studentSql = `select * from users;`;
+    // const studentSql = `INSERT INTO Students (UserId, RollNo, Department, DietaryPreferences, RegistrationStatus) VALUES (${db.escape(decode.id)}, ${db.escape(req.body.roll_number)}, ${db.escape(req.body.department)}, ${db.escape(req.body.dietary_preferences)}, ${db.escape(registerationOption)})`;
+    const studentSql = `select * from users;`;
 
     db.query(studentSql, (err, studentResult) => {
         if (err) {
@@ -128,8 +157,8 @@ const studentForm = (req, res) => {
             const familyMemberName = req.body[`family_member_${i}_name`] || ''; // Set to empty string if undefined
             const familyMemberContact = req.body[`family_member_${i}_contact`] || ''; // Set to empty string if undefined
             const familyMemberCnic = req.body[`family_member_${i}_cnic`] || ''; // Set to empty string if undefined
-
             // Check if any of the family member fields are defined
+            console.log("Im HEre");
             if (familyMemberName || familyMemberContact || familyMemberCnic) {
                 const familySql = `INSERT INTO FamilyMembers (Name, Contact, CNIC, UserId) VALUES (?, ?, ?, ?)`;
                 const familyValues = [familyMemberName, familyMemberContact, familyMemberCnic, decode.id];
@@ -143,7 +172,13 @@ const studentForm = (req, res) => {
                 });
             }
         }
-        return res.render('./home');
+        db.query('SELECT * from Announcement;', (error, results) => {
+            if (error) {
+                return res.status(500).send({ message: 'Error fetching proposals' });
+            }
+    
+            return res.render('home', { announcements: results });
+        });
     });
 };
 
@@ -179,7 +214,7 @@ const teacherForm = (req, res) => {
             const familyMemberName = req.body[`family_member_${i}_name`] || ''; // Set to empty string if undefined
             const familyMemberContact = req.body[`family_member_${i}_contact`] || ''; // Set to empty string if undefined
             const familyMemberCnic = req.body[`family_member_${i}_cnic`] || ''; // Set to empty string if undefined
-
+            
             // Check if any of the family member fields are defined
             if (familyMemberName || familyMemberContact || familyMemberCnic) {
                 const familySql = `INSERT INTO FamilyMembers (Name, Contact, CNIC, UserId) VALUES (?, ?, ?, ?)`;
@@ -194,19 +229,57 @@ const teacherForm = (req, res) => {
                 });
             }
         }
-        return res.render('./home');
+        db.query('SELECT * from Announcement;', (error, results) => {
+            if (error) {
+                return res.status(500).send({ message: 'Error fetching proposals' });
+            }
+    
+            return res.render('home', { announcements: results });
+        });
     });
 }
  
 const getHome = (req, res) => {
+    // console.log('home called');
+    // console.log(req.user);
     if (!req.user) {
         return res.status(400).json({ message: 'Please provide a valid Token' });
     }
-    return res.render('./home');
+    db.query('SELECT * from Announcement;', (error, results) => {
+        if (error) {
+            return res.status(500).send({ message: 'Error fetching proposals' });
+        }
+
+        return res.render('home', { announcements: results });
+    });
+}
+
+const getAdminHome = (req, res) => {
+    // console.log('admin callded');
+    // console.log(req);
+    if (!req.cookies) {
+        return res.status(400).json({ message: 'Please provide a valid Token' });
+    }
+    
+    // Query to count attending students
+    db.query('SELECT COUNT(*) AS AttendingStudentsCount FROM Students WHERE RegistrationStatus = 1', (error, studentResult) => {
+        if (error) {
+            return res.status(500).send({ message: 'Error counting attending students' });
+        }
+
+        db.query('SELECT COUNT(*) AS AttendingTeachersCount FROM Teachers WHERE RegistrationStatus = 1', (error, result) => {
+            if (error) {
+                return res.status(500).send({ message: 'Error counting attending students' });
+            }
+            var attendees = result[0].AttendingTeachersCount + studentResult[0].AttendingStudentsCount;
+            return res.render('adminHome', { attendingPeopleCount: attendees });
+        });
+    });
 }
 
 // ============================MIDDLE WARES ==================================
 const isAuthorized = async (req, res, next) => {
+    // console.log('Auth done');
     try {
         const authToken = req.cookies.token;
         if (!authToken) {
@@ -218,8 +291,34 @@ const isAuthorized = async (req, res, next) => {
         }
         
         req.user = decode;
-        // If the token is valid, proceed to the next middleware
+        // If the token is valid, proceed to the next middleware or functiond
         next();
+    } catch (error) {
+        console.log(error.message);
+        return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+    }
+}
+
+const isAdmin = async (req, res, next) => {
+    // console.log('asdmin done');
+    try {
+        const authToken = req.cookies.token;
+        if (!authToken) {
+            return res.status(401).json({ message: 'Unauthorized: Missing token' });
+        }
+        const decode = jwt.verify(authToken, JWT_SECRET);
+        if (!decode) {
+            return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+        }
+
+        if (decode.userType === 'admin') {
+            req.user = decode;
+            // If user is valid admin, proceed to the next middleware or function
+            next();
+        } else {
+            return res.status(401).json({ message: 'You are Unauthorized to view this page.' });
+        }
+        
     } catch (error) {
         console.log(error.message);
         return res.status(401).json({ message: 'Unauthorized: Invalid token' });
@@ -232,8 +331,10 @@ module.exports = {
     login,
     getHome,
     isAuthorized,
+    isAdmin,
     studentForm,
-    teacherForm
+    teacherForm,
+    getAdminHome
 }
 
 
