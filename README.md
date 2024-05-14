@@ -2,5 +2,7 @@
 Node js
 My SQL
 Java Script
+JWT
+REST
 HTML
 CSS
